@@ -1,0 +1,7 @@
+version: '2.0'
+workflow:
+  tasks:
+    GPEA_Success_Rate_Report_HK_TW_25898500:
+      action: civis.run_job
+      input:
+        job_id: 25898500
