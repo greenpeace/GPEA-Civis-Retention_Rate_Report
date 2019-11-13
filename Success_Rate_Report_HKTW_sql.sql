@@ -37,10 +37,70 @@ RetentionReport1 a
 left join RetentionReport2 b on a.rgid=b.rgid and a.monthcount=b.monthcount1)
 where success is not null;
 
+----KR data regenerate
+create temp table retentionreportKR as
+select * from
+(
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 1 as monthcount,to_number("1",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 2 as monthcount,to_number("2",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 3 as monthcount,to_number("3",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 4 as monthcount,to_number("4",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 5 as monthcount,to_number("5",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 6 as monthcount,to_number("6",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr  
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 7 as monthcount,to_number("7",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr  
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 8 as monthcount,to_number("8",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 9 as monthcount,to_number("9",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 10 as monthcount,to_number("10",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr  
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 11 as monthcount,to_number("11",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr  
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 12 as monthcount,to_number("12",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr  
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 13 as monthcount,to_number("13",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr  
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 14 as monthcount,to_number("14",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr 
+ union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 15 as monthcount,to_number("15",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr 
+  union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 16 as monthcount,to_number("16",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr 
+  union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 17 as monthcount,to_number("17",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr 
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 18 as monthcount,to_number("18",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr 
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 19 as monthcount,to_number("19",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr 
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 20 as monthcount,to_number("20",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr 
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 21 as monthcount,to_number("21",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 22 as monthcount,to_number("22",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 23 as monthcount,to_number("23",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 24 as monthcount,to_number("24",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 36 as monthcount,to_number("36",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+union all
+select '' as rgid,'Korea' as region, '' as contactid, constituent_id as constituentid, year as signupyear, month as signupmonth, to_date("join date",'YYYY-MM-DD') as signupdate,'' as name, source, subsource as resource, '' as team, '' as recruiter, '' as agegroup, '' as paymentmethod, '' as rgstatus, 0 as fixeddonationperiod, 0 as delaydonation, 0 as bothfixeddelay, 48 as monthcount,to_number("48",'99.99999') as success, 0 as signupcount, 0 as predebit from gpea_reporting.table_report_Success_Rate_kr
+);
+
+
 ----create_table
 DROP TABLE if exists gpea_reporting.table_report_Success_Rate; 
 CREATE TABLE gpea_reporting.table_report_Success_Rate AS (
-select * from RetentionReport3);
+select * from RetentionReport3
+union all
+select * from retentionreportKR);
 
 
 -- GRANT Statements for GPEA Group
@@ -48,7 +108,7 @@ GRANT ALL ON SCHEMA gpea_analytics TO GROUP gpea;
 GRANT ALL ON SCHEMA gpea_staging TO GROUP gpea;
 GRANT ALL ON SCHEMA gpea_reporting TO GROUP gpea;
 GRANT ALL ON SCHEMA public TO GROUP gpea;
----GRANT ALL ON gpea_reporting.table_report_success_rate TO GROUP gpea;
+GRANT ALL ON gpea_reporting.table_report_Success_Rate TO GROUP gpea;
 GRANT ALL ON gpea_staging.monthcount TO GROUP gpea;
 
 GRANT ALL ON gpea_analytics.extract_campaign TO GROUP gpea;
@@ -57,15 +117,10 @@ GRANT ALL ON gpea_analytics.extract_opportunity TO GROUP gpea;
 GRANT ALL ON gpea_analytics.extract_regulargiving TO GROUP gpea;
 
 GRANT ALL ON gpea_staging.kr_supporter_alc TO GROUP gpea;
-GRANT ALL ON gpea_staging.kr_refund TO GROUP gpea;
 GRANT ALL ON gpea_staging.kr_income_account TO GROUP gpea;
 GRANT ALL ON gpea_staging.kr_upgrade_monthly TO GROUP gpea;
 GRANT ALL ON gpea_staging.kr_downgrade_monthly TO GROUP gpea;
-GRANT ALL ON gpea_staging.kr_vw_mrm_history TO GROUP gpea;
-GRANT ALL ON gpea_staging.kr_vw_mrm_payment_result TO GROUP gpea;
 GRANT ALL ON gpea_staging.currency_conversion TO GROUP gpea;
-
-GRANT ALL ON gpea_staging.kr_vw_mrm_groups TO GROUP gpea;
 
 GRANT ALL ON gpea_analytics.extract_2017budget_income TO GROUP gpea;
 GRANT ALL ON gpea_analytics.extract_2018budget_income TO GROUP gpea;
@@ -80,7 +135,7 @@ GRANT ALL ON SCHEMA gpea_analytics TO greenpeaceearobot;
 GRANT ALL ON SCHEMA gpea_staging TO greenpeaceearobot;
 GRANT ALL ON SCHEMA gpea_reporting TO greenpeaceearobot;
 GRANT ALL ON SCHEMA public TO greenpeaceearobot;
-----GRANT ALL ON gpea_reporting.table_report_success_rate TO greenpeaceearobot;
+GRANT ALL ON gpea_reporting.table_report_Success_Rate TO greenpeaceearobot;
 GRANT ALL ON gpea_staging.monthcount TO greenpeaceearobot;
 
 
@@ -90,15 +145,10 @@ GRANT ALL ON gpea_analytics.extract_opportunity TO greenpeaceearobot;
 GRANT ALL ON gpea_analytics.extract_regulargiving TO greenpeaceearobot;
 
 GRANT ALL ON gpea_staging.kr_supporter_alc TO greenpeaceearobot;
-GRANT ALL ON gpea_staging.kr_refund TO greenpeaceearobot;
 GRANT ALL ON gpea_staging.kr_income_account TO greenpeaceearobot;
 GRANT ALL ON gpea_staging.kr_upgrade_monthly TO greenpeaceearobot;
 GRANT ALL ON gpea_staging.kr_downgrade_monthly TO greenpeaceearobot;
-GRANT ALL ON gpea_staging.kr_vw_mrm_history TO greenpeaceearobot;
-GRANT ALL ON gpea_staging.kr_vw_mrm_payment_result TO greenpeaceearobot;
 GRANT ALL ON gpea_staging.currency_conversion TO greenpeaceearobot;
-
-GRANT ALL ON gpea_staging.kr_vw_mrm_groups TO greenpeaceearobot;
 
 GRANT ALL ON gpea_analytics.extract_2017budget_income TO greenpeaceearobot;
 GRANT ALL ON gpea_analytics.extract_2018budget_income TO greenpeaceearobot;
@@ -112,7 +162,7 @@ GRANT ALL ON SCHEMA gpea_analytics TO GROUP civis;
 GRANT ALL ON SCHEMA gpea_staging TO GROUP civis;
 GRANT ALL ON SCHEMA gpea_reporting TO GROUP civis;
 GRANT ALL ON SCHEMA public TO GROUP civis;
----GRANT ALL ON gpea_reporting.table_report_success_rate TO GROUP civis;
+GRANT ALL ON gpea_reporting.table_report_Success_Rate TO GROUP civis;
 GRANT ALL ON gpea_staging.monthcount TO GROUP civis;
 
 GRANT ALL ON gpea_analytics.extract_campaign TO GROUP civis;
@@ -121,15 +171,10 @@ GRANT ALL ON gpea_analytics.extract_opportunity TO GROUP civis;
 GRANT ALL ON gpea_analytics.extract_regulargiving TO GROUP civis;
 
 GRANT ALL ON gpea_staging.kr_supporter_alc TO GROUP civis;
-GRANT ALL ON gpea_staging.kr_refund TO GROUP civis;
 GRANT ALL ON gpea_staging.kr_income_account TO GROUP civis;
 GRANT ALL ON gpea_staging.kr_upgrade_monthly TO GROUP civis;
 GRANT ALL ON gpea_staging.kr_downgrade_monthly TO GROUP civis;
-GRANT ALL ON gpea_staging.kr_vw_mrm_history TO GROUP civis;
-GRANT ALL ON gpea_staging.kr_vw_mrm_payment_result TO GROUP civis;
 GRANT ALL ON gpea_staging.currency_conversion TO GROUP civis;
-
-GRANT ALL ON gpea_staging.kr_vw_mrm_groups TO GROUP civis;
 
 GRANT ALL ON gpea_analytics.extract_2017budget_income TO GROUP civis;
 GRANT ALL ON gpea_analytics.extract_2018budget_income TO GROUP civis;
