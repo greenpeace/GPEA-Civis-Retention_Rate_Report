@@ -5,9 +5,9 @@ workflow:
       action: civis.run_job
       input:
         job_id: 25898500
-      on-success:
-        - Korea_Success_Rate_Data_Import_35105242
     Korea_Success_Rate_Data_Import_35105242:
       action: civis.run_job
       input:
         job_id: 35105242
+      on-success:
+        - GPEA_Success_Rate_Report_HK_TW_25898500
