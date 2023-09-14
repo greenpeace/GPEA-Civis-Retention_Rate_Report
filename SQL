@@ -26,6 +26,7 @@ CREATE TEMP TABLE recurring_donation AS (
 	CASE WHEN rd.payment_method__c = 'Credit Card (AMEX)' THEN 'Credit Card'
 	ELSE rd.payment_method__c
 	END AS payment_method,
+  c.age__c AS age,
   c.age_group__c AS age_group,
   ini_cm.campaign AS campaign,
 	(DATE_PART('year',GETDATE()::date)-DATE_PART('year',rd.sign_up_date__c))*12+(DATE_PART('month',GETDATE()::date)-DATE_PART('month',rd.sign_up_date__c))+1 AS month_since_join
@@ -152,7 +153,7 @@ CREATE TABLE gpea_reporting.report_success_rate AS (
   
   SELECT rd.market,rd.constituent_id,rd.recurring_donation,
   rd.join_date,rd.source,rd.subsource,rd.team,
-  rd.gender,rd.payment_method,rd.age_group,rd.campaign,
+  rd.gender,rd.payment_method,rd.age,age_group,rd.campaign,
   rd.month_since_join,
   CASE WHEN rd.month_since_join<=1 THEN NULL WHEN pd.mon_1=1 THEN 1 ELSE 0 END AS mon_1,
   CASE WHEN rd.month_since_join<=2 THEN NULL WHEN pd.mon_2=1 THEN 1 ELSE 0 END AS mon_2,
@@ -191,5 +192,5 @@ CREATE TABLE gpea_reporting.report_success_rate AS (
 );
 
 --gpea_reporting.table_report_new_success_rate
-GRANT SELECT ON gpea_reporting.report_success_rate TO GROUP gpea;
-GRANT SELECT ON gpea_reporting.report_success_rate TO greenpeaceearobot;
+GRANT ALL ON gpea_reporting.report_success_rate TO GROUP gpea;
+GRANT ALL ON gpea_reporting.report_success_rate TO greenpeaceearobot;
