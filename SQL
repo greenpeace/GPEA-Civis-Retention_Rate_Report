@@ -1,0 +1,195 @@
+-- (1) All Recurring Donations with Contact Info / Each row is a recurring donation
+--		to control which donations to pull in 
+
+CREATE TEMP TABLE recurring_donation AS (
+  
+  SELECT 
+  CASE 
+  WHEN c.market__c='a0J2u000001NjoNEAS' THEN 'Taiwan' 
+  WHEN c.market__c='a0J2u000001NjoJEAS' THEN 'Hong Kong'
+  WHEN c.market__c='a0J2u000001NjoMEAS' THEN 'Korea' 
+  ELSE NULL END AS market,
+	c.constituent_id__c AS constituent_id,
+  rd.name AS recurring_donation,
+  rd.sign_up_date__c AS join_date,
+	CASE WHEN ini_cm.source IS NOT NULL THEN ini_cm.source ELSE 'Others' END AS source,
+  ini_cm.subsource AS subsource,
+  CASE WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' AND rd.market__c='a0J2u000001NjoOEAS' THEN 'TP'
+  	WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' AND rd.market__c='a0J2u000001NjoKEAS' THEN 'KS'
+    WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' AND rd.market__c='a0J2u000001NjoLEAS' THEN 'TC'
+    WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' THEN 'TP'
+    WHEN c.market__c='a0J2u000001NjoNEAS' THEN 'TW' 
+  	WHEN c.market__c='a0J2u000001NjoJEAS' THEN 'HK'
+  	WHEN c.market__c='a0J2u000001NjoMEAS' THEN 'KR'
+    ELSE NULL END AS team,
+	CASE WHEN c.gender__c IN ('Male','Female') THEN c.gender__c ELSE 'Not Stated' END AS gender,
+	CASE WHEN rd.payment_method__c = 'Credit Card (AMEX)' THEN 'Credit Card'
+	ELSE rd.payment_method__c
+	END AS payment_method,
+  c.age_group__c AS age_group,
+  ini_cm.campaign AS campaign,
+	(DATE_PART('year',GETDATE()::date)-DATE_PART('year',rd.sign_up_date__c))*12+(DATE_PART('month',GETDATE()::date)-DATE_PART('month',rd.sign_up_date__c))+1 AS month_since_join
+	FROM gpea_staging.mx_contact c
+	INNER JOIN gpea_staging.mx_recurring_donation rd ON rd.contact__c=c.id
+	LEFT JOIN (
+      
+      SELECT rdt.id AS rd_id,
+      CASE WHEN cm.cocoa_program__c='Direct Dialogue' THEN 'DDC' 
+          WHEN cm.cocoa_program__c ='Telephone' THEN 'Lead Conversion'
+          WHEN cm.cocoa_program__c IN ('Web','DRTV','Reactivation') THEN cm.cocoa_program__c 
+          ELSE 'Others' END AS source,
+          cm.name AS campaign,
+          cm.resource__c AS subsource,
+          ROW_NUMBER()OVER(PARTITION BY rdt.id ORDER BY ri.sequence__c) AS pick
+          FROM gpea_staging.mx_recurring_donation rdt
+          INNER JOIN gpea_staging.mx_recurring_item ri ON ri.recurring_donation__c=rdt.id
+          INNER JOIN gpea_staging.mx_campaign cm ON cm.id=ri.campaign__c
+         
+  ) ini_cm ON ini_cm.rd_id=rd.id AND pick=1
+  WHERE c.testing_contact__c='f'
+
+);
+
+
+--(2) All Processed Donations Inner Join Recurring Donations / Each row is a donation
+
+
+CREATE TEMP TABLE donation AS (
+  
+  SELECT rd.name AS recurring_donation,
+	(DATE_PART('year',d.date__c)-DATE_PART('year',rd.sign_up_date__c))*12+(DATE_PART('month',d.date__c)-DATE_PART('month',rd.sign_up_date__c))+1 AS months,d.date__c
+	FROM gpea_staging.mx_recurring_donation rd
+	INNER JOIN gpea_staging.mx_donation d ON rd.id=d.recurring_donation__c
+	WHERE d.status__c='Processed' AND d.amount__c>0
+  
+  
+);
+
+
+--(3) Modify from (2) to give out 1 or 0 / Each row is a donation
+CREATE TEMP TABLE donation_month AS (
+  
+    SELECT * ,
+    CASE WHEN d.months=1 THEN 1 ELSE 0 END AS mon_1,
+    CASE WHEN d.months=2 THEN 1 ELSE 0 END AS mon_2,
+    CASE WHEN d.months=3 THEN 1 ELSE 0 END AS mon_3,
+    CASE WHEN d.months=4 THEN 1 ELSE 0 END AS mon_4,
+    CASE WHEN d.months=5 THEN 1 ELSE 0 END AS mon_5,
+    CASE WHEN d.months=6 THEN 1 ELSE 0 END AS mon_6,
+    CASE WHEN d.months=7 THEN 1 ELSE 0 END AS mon_7,
+    CASE WHEN d.months=8 THEN 1 ELSE 0 END AS mon_8,
+    CASE WHEN d.months=9 THEN 1 ELSE 0 END AS mon_9,
+    CASE WHEN d.months=10 THEN 1 ELSE 0 END AS mon_10,
+    CASE WHEN d.months=11 THEN 1 ELSE 0 END AS mon_11,
+    CASE WHEN d.months=12 THEN 1 ELSE 0 END AS mon_12,
+    CASE WHEN d.months=13 THEN 1 ELSE 0 END AS mon_13,
+    CASE WHEN d.months=14 THEN 1 ELSE 0 END AS mon_14,
+    CASE WHEN d.months=15 THEN 1 ELSE 0 END AS mon_15,
+    CASE WHEN d.months=16 THEN 1 ELSE 0 END AS mon_16,
+    CASE WHEN d.months=17 THEN 1 ELSE 0 END AS mon_17,
+    CASE WHEN d.months=18 THEN 1 ELSE 0 END AS mon_18,
+    CASE WHEN d.months=19 THEN 1 ELSE 0 END AS mon_19,
+    CASE WHEN d.months=20 THEN 1 ELSE 0 END AS mon_20,
+    CASE WHEN d.months=21 THEN 1 ELSE 0 END AS mon_21,
+    CASE WHEN d.months=22 THEN 1 ELSE 0 END AS mon_22,
+    CASE WHEN d.months=23 THEN 1 ELSE 0 END AS mon_23,
+    CASE WHEN d.months=24 THEN 1 ELSE 0 END AS mon_24,
+    CASE WHEN d.months=30 THEN 1 ELSE 0 END AS mon_30,
+    CASE WHEN d.months=36 THEN 1 ELSE 0 END AS mon_36,
+    CASE WHEN d.months=48 THEN 1 ELSE 0 END AS mon_48,
+    CASE WHEN d.months=60 THEN 1 ELSE 0 END AS mon_60,
+    CASE WHEN d.months=72 THEN 1 ELSE 0 END AS mon_72
+    FROM donation d
+  
+);
+
+
+--(4) Modify from (3) / Each row is a recurring donation
+
+
+CREATE TEMP TABLE processed_donation AS (
+    SELECT dm.recurring_donation,
+    CASE WHEN MAX(mon_1)!=0 THEN 1 ELSE 0 END AS mon_1,
+    CASE WHEN MAX(mon_2)!=0 THEN 1 ELSE 0 END AS mon_2,
+    CASE WHEN MAX(mon_3)!=0 THEN 1 ELSE 0 END AS mon_3,
+    CASE WHEN MAX(mon_4)!=0 THEN 1 ELSE 0 END AS mon_4,
+    CASE WHEN MAX(mon_5)!=0 THEN 1 ELSE 0 END AS mon_5,
+    CASE WHEN MAX(mon_6)!=0 THEN 1 ELSE 0 END AS mon_6,
+    CASE WHEN MAX(mon_7)!=0 THEN 1 ELSE 0 END AS mon_7,
+    CASE WHEN MAX(mon_8)!=0 THEN 1 ELSE 0 END AS mon_8,
+    CASE WHEN MAX(mon_9)!=0 THEN 1 ELSE 0 END AS mon_9,
+    CASE WHEN MAX(mon_10)!=0 THEN 1 ELSE 0 END AS mon_10,
+    CASE WHEN MAX(mon_11)!=0 THEN 1 ELSE 0 END AS mon_11,
+    CASE WHEN MAX(mon_12)!=0 THEN 1 ELSE 0 END AS mon_12,
+  	CASE WHEN MAX(mon_13)!=0 THEN 1 ELSE 0 END AS mon_13,
+    CASE WHEN MAX(mon_14)!=0 THEN 1 ELSE 0 END AS mon_14,
+    CASE WHEN MAX(mon_15)!=0 THEN 1 ELSE 0 END AS mon_15,
+    CASE WHEN MAX(mon_16)!=0 THEN 1 ELSE 0 END AS mon_16,
+    CASE WHEN MAX(mon_17)!=0 THEN 1 ELSE 0 END AS mon_17,
+    CASE WHEN MAX(mon_18)!=0 THEN 1 ELSE 0 END AS mon_18,
+    CASE WHEN MAX(mon_19)!=0 THEN 1 ELSE 0 END AS mon_19,
+    CASE WHEN MAX(mon_20)!=0 THEN 1 ELSE 0 END AS mon_20,
+    CASE WHEN MAX(mon_21)!=0 THEN 1 ELSE 0 END AS mon_21,
+    CASE WHEN MAX(mon_22)!=0 THEN 1 ELSE 0 END AS mon_22,
+    CASE WHEN MAX(mon_23)!=0 THEN 1 ELSE 0 END AS mon_23,
+    CASE WHEN MAX(mon_24)!=0 THEN 1 ELSE 0 END AS mon_24,
+    CASE WHEN MAX(mon_30)!=0 THEN 1 ELSE 0 END AS mon_30,
+    CASE WHEN MAX(mon_36)!=0 THEN 1 ELSE 0 END AS mon_36,
+    CASE WHEN MAX(mon_48)!=0 THEN 1 ELSE 0 END AS mon_48,
+    CASE WHEN MAX(mon_60)!=0 THEN 1 ELSE 0 END AS mon_60,
+    CASE WHEN MAX(mon_72)!=0 THEN 1 ELSE 0 END AS mon_72
+  
+    FROM donation_month dm
+    GROUP BY dm.recurring_donation
+);
+
+
+-- (5) Final Table : (1) Left Join (4) 
+--    to control which recurring donations to pull in (e.g. pull in new signup RDs after mid month)
+
+DROP TABLE if exists gpea_reporting.report_success_rate;
+CREATE TABLE gpea_reporting.report_success_rate AS (
+  
+  SELECT rd.market,rd.constituent_id,rd.recurring_donation,
+  rd.join_date,rd.source,rd.subsource,rd.team,
+  rd.gender,rd.payment_method,rd.age_group,rd.campaign,
+  rd.month_since_join,
+  CASE WHEN rd.month_since_join<=1 THEN NULL WHEN pd.mon_1=1 THEN 1 ELSE 0 END AS mon_1,
+  CASE WHEN rd.month_since_join<=2 THEN NULL WHEN pd.mon_2=1 THEN 1 ELSE 0 END AS mon_2,
+  CASE WHEN rd.month_since_join<=3 THEN NULL WHEN pd.mon_3=1 THEN 1 ELSE 0 END AS mon_3,
+  CASE WHEN rd.month_since_join<=4 THEN NULL WHEN pd.mon_4=1 THEN 1 ELSE 0 END AS mon_4,
+  CASE WHEN rd.month_since_join<=5 THEN NULL WHEN pd.mon_5=1 THEN 1 ELSE 0 END AS mon_5,
+  CASE WHEN rd.month_since_join<=6 THEN NULL WHEN pd.mon_6=1 THEN 1 ELSE 0 END AS mon_6,
+  CASE WHEN rd.month_since_join<=7 THEN NULL WHEN pd.mon_7=1 THEN 1 ELSE 0 END AS mon_7,
+  CASE WHEN rd.month_since_join<=8 THEN NULL WHEN pd.mon_8=1 THEN 1 ELSE 0 END AS mon_8,
+  CASE WHEN rd.month_since_join<=9 THEN NULL WHEN pd.mon_9=1 THEN 1 ELSE 0 END AS mon_9,
+  CASE WHEN rd.month_since_join<=10 THEN NULL WHEN pd.mon_10=1 THEN 1 ELSE 0 END AS mon_10,
+  CASE WHEN rd.month_since_join<=11 THEN NULL WHEN pd.mon_11=1 THEN 1 ELSE 0 END AS mon_11,
+  CASE WHEN rd.month_since_join<=12 THEN NULL WHEN pd.mon_12=1 THEN 1 ELSE 0 END AS mon_12,
+  CASE WHEN rd.month_since_join<=13 THEN NULL WHEN pd.mon_13=1 THEN 1 ELSE 0 END AS mon_13,
+  CASE WHEN rd.month_since_join<=14 THEN NULL WHEN pd.mon_14=1 THEN 1 ELSE 0 END AS mon_14,
+  CASE WHEN rd.month_since_join<=15 THEN NULL WHEN pd.mon_15=1 THEN 1 ELSE 0 END AS mon_15,
+  CASE WHEN rd.month_since_join<=16 THEN NULL WHEN pd.mon_16=1 THEN 1 ELSE 0 END AS mon_16,
+  CASE WHEN rd.month_since_join<=17 THEN NULL WHEN pd.mon_17=1 THEN 1 ELSE 0 END AS mon_17,
+  CASE WHEN rd.month_since_join<=18 THEN NULL WHEN pd.mon_18=1 THEN 1 ELSE 0 END AS mon_18,
+  CASE WHEN rd.month_since_join<=19 THEN NULL WHEN pd.mon_19=1 THEN 1 ELSE 0 END AS mon_19,
+  CASE WHEN rd.month_since_join<=20 THEN NULL WHEN pd.mon_20=1 THEN 1 ELSE 0 END AS mon_20,
+  CASE WHEN rd.month_since_join<=21 THEN NULL WHEN pd.mon_21=1 THEN 1 ELSE 0 END AS mon_21,
+  CASE WHEN rd.month_since_join<=22 THEN NULL WHEN pd.mon_22=1 THEN 1 ELSE 0 END AS mon_22,
+  CASE WHEN rd.month_since_join<=23 THEN NULL WHEN pd.mon_23=1 THEN 1 ELSE 0 END AS mon_23,	
+  CASE WHEN rd.month_since_join<=24 THEN NULL WHEN pd.mon_24=1 THEN 1 ELSE 0 END AS mon_24,
+  CASE WHEN rd.month_since_join<=30 THEN NULL WHEN pd.mon_30=1 THEN 1 ELSE 0 END AS mon_30,
+  CASE WHEN rd.month_since_join<=36 THEN NULL WHEN pd.mon_36=1 THEN 1 ELSE 0 END AS mon_36,
+  CASE WHEN rd.month_since_join<=48 THEN NULL WHEN pd.mon_48=1 THEN 1 ELSE 0 END AS mon_48,
+  CASE WHEN rd.month_since_join<=60 THEN NULL WHEN pd.mon_60=1 THEN 1 ELSE 0 END AS mon_60,
+  CASE WHEN rd.month_since_join<=72 THEN NULL WHEN pd.mon_72=1 THEN 1 ELSE 0 END AS mon_72
+	FROM recurring_donation rd
+	LEFT JOIN processed_donation pd ON rd.recurring_donation=pd.recurring_donation	
+  WHERE rd.market IN ('Hong Kong','Taiwan','Korea')
+  AND rd.month_since_join>1
+  AND payment_method NOT IN ('Cash')
+);
+
+--gpea_reporting.table_report_new_success_rate
+GRANT SELECT ON gpea_reporting.report_success_rate TO GROUP gpea;
+GRANT SELECT ON gpea_reporting.report_success_rate TO greenpeaceearobot;
