@@ -9,8 +9,8 @@ CREATE TEMP TABLE recurring_donation AS (
   WHEN c.market__c='a0J2u000001NjoJEAS' THEN 'Hong Kong'
   WHEN c.market__c='a0J2u000001NjoMEAS' THEN 'Korea' 
   ELSE NULL END AS market,
-	c.constituent_id__c AS constituent_id,
-  rd.name AS recurring_donation,
+	c.id AS contact_id,
+  rd.id AS recurring_donation,
   rd.sign_up_date__c AS join_date,
 	CASE WHEN ini_cm.source IS NOT NULL THEN ini_cm.source ELSE 'Others' END AS source,
   ini_cm.subsource AS subsource,
@@ -57,7 +57,7 @@ CREATE TEMP TABLE recurring_donation AS (
 
 CREATE TEMP TABLE donation AS (
   
-  SELECT rd.name AS recurring_donation,
+  SELECT rd.id AS recurring_donation,
 	(DATE_PART('year',d.date__c)-DATE_PART('year',rd.sign_up_date__c))*12+(DATE_PART('month',d.date__c)-DATE_PART('month',rd.sign_up_date__c))+1 AS months,d.date__c
 	FROM gpea_staging.mx_recurring_donation rd
 	INNER JOIN gpea_staging.mx_donation d ON rd.id=d.recurring_donation__c
@@ -148,10 +148,10 @@ CREATE TEMP TABLE processed_donation AS (
 -- (5) Final Table : (1) Left Join (4) 
 --    to control which recurring donations to pull in (e.g. pull in new signup RDs after mid month)
 
-DROP TABLE if exists gpea_reporting.report_success_rate;
-CREATE TABLE gpea_reporting.report_success_rate AS (
+DROP TABLE if exists gpea_reporting.report_retention_rate;
+CREATE TABLE gpea_reporting.report_retention_rate AS (
   
-  SELECT rd.market,rd.constituent_id,rd.recurring_donation,
+  SELECT rd.market,rd.contact_id,rd.recurring_donation,
   rd.join_date,rd.source,rd.subsource,rd.team,
   rd.gender,rd.payment_method,rd.age,age_group,rd.campaign,
   rd.month_since_join,
@@ -192,5 +192,5 @@ CREATE TABLE gpea_reporting.report_success_rate AS (
 );
 
 --gpea_reporting.table_report_new_success_rate
-GRANT ALL ON gpea_reporting.report_success_rate TO GROUP gpea;
-GRANT ALL ON gpea_reporting.report_success_rate TO greenpeaceearobot;
+GRANT ALL ON gpea_reporting.report_retention_rate TO GROUP gpea;
+GRANT ALL ON gpea_reporting.report_retention_rate TO greenpeaceearobot;
