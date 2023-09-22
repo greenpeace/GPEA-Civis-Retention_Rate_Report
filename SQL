@@ -12,12 +12,15 @@ CREATE TEMP TABLE recurring_donation AS (
 	c.id AS contact_id,
   rd.id AS recurring_donation,
   rd.sign_up_date__c AS join_date,
-	CASE WHEN ini_cm.source IS NOT NULL THEN ini_cm.source ELSE 'Others' END AS source,
-  ini_cm.subsource AS subsource,
-  CASE WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' AND rd.market__c='a0J2u000001NjoOEAS' THEN 'TP'
-  	WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' AND rd.market__c='a0J2u000001NjoKEAS' THEN 'KS'
-    WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' AND rd.market__c='a0J2u000001NjoLEAS' THEN 'TC'
-    WHEN c.market__c='a0J2u000001NjoNEAS' AND ini_cm.source='DDC' THEN 'TP'
+	CASE 
+  WHEN cp.cocoa_program__c ='Direct Dialogue' THEN 'DDC' 
+  WHEN cp.cocoa_program__c IN ('Web', 'DRTV', 'Reactivation', 'Telephone') THEN cp.cocoa_program__c  
+  ELSE 'Others' END AS channel,
+  cp.resource__c AS resource,
+  CASE WHEN c.market__c='a0J2u000001NjoNEAS' AND cp.cocoa_program__c = 'Direct Dialogue' AND rd.market__c='a0J2u000001NjoOEAS' THEN 'TP'
+  	WHEN c.market__c='a0J2u000001NjoNEAS' AND cp.cocoa_program__c='Direct Dialogue' AND rd.market__c='a0J2u000001NjoKEAS' THEN 'KS'
+    WHEN c.market__c='a0J2u000001NjoNEAS' AND cp.cocoa_program__c='Direct Dialogue' AND rd.market__c='a0J2u000001NjoLEAS' THEN 'TC'
+    WHEN c.market__c='a0J2u000001NjoNEAS' AND cp.cocoa_program__c='Direct Dialogue' THEN 'TP'
     WHEN c.market__c='a0J2u000001NjoNEAS' THEN 'TW' 
   	WHEN c.market__c='a0J2u000001NjoJEAS' THEN 'HK'
   	WHEN c.market__c='a0J2u000001NjoMEAS' THEN 'KR'
@@ -28,27 +31,16 @@ CREATE TEMP TABLE recurring_donation AS (
 	END AS payment_method,
   c.age__c AS age,
   c.age_group__c AS age_group,
-  ini_cm.campaign AS campaign,
-	(DATE_PART('year',GETDATE()::date)-DATE_PART('year',rd.sign_up_date__c))*12+(DATE_PART('month',GETDATE()::date)-DATE_PART('month',rd.sign_up_date__c))+1 AS month_since_join
+  cp.name AS campaign,
+  --ini_cm.campaign AS campaign,
+  avg(d.amount__c) AS avg_amt,
+	(DATE_PART('year',GETDATE()::date)-DATE_PART('year',rd.sign_up_date__c))*12+(DATE_PART('month',GETDATE()::date)-DATE_PART('month',rd.sign_up_date__c))+1 AS month_since_join  
 	FROM gpea_staging.mx_contact c
 	INNER JOIN gpea_staging.mx_recurring_donation rd ON rd.contact__c=c.id
-	LEFT JOIN (
-      
-      SELECT rdt.id AS rd_id,
-      CASE WHEN cm.cocoa_program__c='Direct Dialogue' THEN 'DDC' 
-          WHEN cm.cocoa_program__c ='Telephone' THEN 'Lead Conversion'
-          WHEN cm.cocoa_program__c IN ('Web','DRTV','Reactivation') THEN cm.cocoa_program__c 
-          ELSE 'Others' END AS source,
-          cm.name AS campaign,
-          cm.resource__c AS subsource,
-          ROW_NUMBER()OVER(PARTITION BY rdt.id ORDER BY ri.sequence__c) AS pick
-          FROM gpea_staging.mx_recurring_donation rdt
-          INNER JOIN gpea_staging.mx_recurring_item ri ON ri.recurring_donation__c=rdt.id
-          INNER JOIN gpea_staging.mx_campaign cm ON cm.id=ri.campaign__c
-         
-  ) ini_cm ON ini_cm.rd_id=rd.id AND pick=1
+  INNER JOIN gpea_staging.mx_campaign cp ON cp.id = rd.initial_campaign__c
+  LEFT JOIN gpea_staging.mx_donation d ON d.recurring_donation__c = rd.id AND d.amount__c > 0 AND d.status__c = 'Processed'
   WHERE c.testing_contact__c='f'
-
+  GROUP BY c.market__c, c.id, rd.id, rd.sign_up_date__c, cp.cocoa_program__c, cp.resource__c, c.gender__c, rd.market__c, rd.payment_method__c, c.age__c, c.age_group__c, cp.name
 );
 
 
@@ -148,12 +140,12 @@ CREATE TEMP TABLE processed_donation AS (
 -- (5) Final Table : (1) Left Join (4) 
 --    to control which recurring donations to pull in (e.g. pull in new signup RDs after mid month)
 
-DROP TABLE if exists gpea_reporting.report_retention_rate;
-CREATE TABLE gpea_reporting.report_retention_rate AS (
+DROP TABLE if exists gpea_reporting.report_success_rate;
+CREATE TABLE gpea_reporting.report_success_rate AS (
   
   SELECT rd.market,rd.contact_id,rd.recurring_donation,
-  rd.join_date,rd.source,rd.subsource,rd.team,
-  rd.gender,rd.payment_method,rd.age,age_group,rd.campaign,
+  rd.join_date,rd.channel,rd.resource,rd.team,
+  rd.gender,rd.payment_method,rd.age,rd.age_group,rd.campaign,rd.avg_amt,
   rd.month_since_join,
   CASE WHEN rd.month_since_join<=1 THEN NULL WHEN pd.mon_1=1 THEN 1 ELSE 0 END AS mon_1,
   CASE WHEN rd.month_since_join<=2 THEN NULL WHEN pd.mon_2=1 THEN 1 ELSE 0 END AS mon_2,
@@ -192,5 +184,5 @@ CREATE TABLE gpea_reporting.report_retention_rate AS (
 );
 
 --gpea_reporting.table_report_new_success_rate
-GRANT ALL ON gpea_reporting.report_retention_rate TO GROUP gpea;
-GRANT ALL ON gpea_reporting.report_retention_rate TO greenpeaceearobot;
+GRANT ALL ON gpea_reporting.report_success_rate TO GROUP gpea;
+GRANT ALL ON gpea_reporting.report_success_rate TO greenpeaceearobot;
