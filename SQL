@@ -29,10 +29,20 @@ CREATE TEMP TABLE recurring_donation AS (
 	CASE WHEN rd.payment_method__c = 'Credit Card (AMEX)' THEN 'Credit Card'
 	ELSE rd.payment_method__c
 	END AS payment_method,
-  c.age__c AS age,
-  c.age_group__c AS age_group,
+  --c.age__c AS age,
+  --c.age_group__c AS age_group,
+  DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) as age,
+  CASE 
+  WHEN c.birthdate is NULL THEN 'No Birthdate'
+  WHEN DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) >= 70 THEN '70+'
+  WHEN DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) >= 60 THEN '60-69'
+  WHEN DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) >= 50 THEN '50-59'
+  WHEN DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) >= 40 THEN '40-49'
+  WHEN DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) >= 30 THEN '30-39'
+  WHEN DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) >= 20 THEN '20-29'
+  WHEN DATE_DIFF('Year', c.birthdate, rd.sign_up_date__c) < 20 THEN 'Under 20'
+  END AS age_group,
   cp.name AS campaign,
-  --ini_cm.campaign AS campaign,
   avg(d.amount__c) AS avg_amt,
 	(DATE_PART('year',GETDATE()::date)-DATE_PART('year',rd.sign_up_date__c))*12+(DATE_PART('month',GETDATE()::date)-DATE_PART('month',rd.sign_up_date__c))+1 AS month_since_join  
 	FROM gpea_staging.mx_contact c
@@ -40,7 +50,7 @@ CREATE TEMP TABLE recurring_donation AS (
   INNER JOIN gpea_staging.mx_campaign cp ON cp.id = rd.initial_campaign__c
   LEFT JOIN gpea_staging.mx_donation d ON d.recurring_donation__c = rd.id AND d.amount__c > 0 AND d.status__c = 'Processed'
   WHERE c.testing_contact__c='f'
-  GROUP BY c.market__c, c.id, rd.id, rd.sign_up_date__c, cp.cocoa_program__c, cp.resource__c, c.gender__c, rd.market__c, rd.payment_method__c, c.age__c, c.age_group__c, cp.name
+  GROUP BY c.market__c, c.id, rd.id, rd.sign_up_date__c, c.birthdate, cp.cocoa_program__c, cp.resource__c, c.gender__c, rd.market__c, rd.payment_method__c, c.age__c, c.age_group__c, cp.name
 );
 
 
