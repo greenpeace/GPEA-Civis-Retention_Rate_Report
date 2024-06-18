@@ -49,7 +49,7 @@ CREATE TEMP TABLE recurring_donation AS (
 	INNER JOIN gpea_staging.mx_recurring_donation rd ON rd.contact__c=c.id
   INNER JOIN gpea_staging.mx_campaign cp ON cp.id = rd.initial_campaign__c
   LEFT JOIN gpea_staging.mx_donation d ON d.recurring_donation__c = rd.id AND d.amount__c > 0 AND d.status__c = 'Processed'
-  WHERE c.testing_contact__c='f'
+  WHERE c.testing_contact__c='f' AND c.fraudster__c='f'
   GROUP BY c.market__c, c.id, rd.id, rd.sign_up_date__c, c.birthdate, cp.cocoa_program__c, cp.resource__c, c.gender__c, rd.market__c, rd.payment_method__c, c.age__c, c.age_group__c, cp.name
 );
 
